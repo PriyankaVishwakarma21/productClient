@@ -1,0 +1,51 @@
+.home {
+    display: flex;
+}
+
+.productContainer {
+    display: flex;
+    width: 78%;
+    padding: 20px;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.products {
+    width: 30%;
+    margin: 10px;
+}
+
+
+.product-card {
+    margin: 10px 0;
+    height: 100%;
+}
+
+.product-description {
+    max-height: 3.6em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+}
