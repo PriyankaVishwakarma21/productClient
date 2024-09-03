@@ -1,13 +1,17 @@
 import React from 'react'
 import { Card, ListGroup, ListGroupItem, Button, Form } from 'react-bootstrap';
-import secureLocalStorage from 'react-secure-storage';
+// import secureLocalStorage from 'react-secure-storage';
+import UserContext from '../context.js/UserContext';
 
-export default function SingleProduct({ product, onEdit, role, addToCart }) {
+export default function SingleProduct({ product, onEdit, role, addToCart }) {    
     const [color, setColor] = React.useState(null);
     const [size, setSize] = React.useState(null);
+    const { user } = React.useContext(UserContext);
+    console.log('data',user);
+    
     const add = () => {
-        const token = secureLocalStorage.getItem('token');
-        if (token === null) {
+        // const token = secureLocalStorage.getItem('token');
+        if (user.token === null) {
             return alert('Login to the system');
         }
         if (color === null || size === null) {

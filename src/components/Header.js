@@ -1,12 +1,15 @@
 import React from 'react'
 import { Container, Navbar, NavbarBrand, Nav, Dropdown, Badge, Button } from 'react-bootstrap';
 import { FaShoppingCart } from 'react-icons/fa';
-import secureLocalStorage from 'react-secure-storage';
+// import secureLocalStorage from 'react-secure-storage';
+import UserContext from '../context.js/UserContext';
 
 const Header = () => {
+    const { signOut, user } = React.useContext(UserContext);
     const logout = () => {
-        secureLocalStorage.removeItem('role');
-        secureLocalStorage.removeItem('token');
+        signOut();
+        // secureLocalStorage.removeItem('role');
+        // secureLocalStorage.removeItem('token');
     }
     return (
         <>
@@ -29,8 +32,8 @@ const Header = () => {
                             </Dropdown.Menu>
                         </Dropdown>
                     </Nav>
-                    <Button variant="primary" ><a href="/login">Sign In</a></Button>
-                    <Button variant="primary" onClick={() => logout()}>Sign Out</Button>
+                    {user.token === null && <Button variant="primary" ><a href="/login">Sign In</a></Button>}
+                    {user.token !== null && <Button variant="primary" onClick={() => logout()}>Sign Out</Button>}
 
                 </Container>
             </Navbar>

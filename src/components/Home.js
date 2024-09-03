@@ -4,16 +4,15 @@ import { Row, Col, Button } from 'react-bootstrap';
 import SingleProduct from './SingleProduct';
 import './styles.css';
 import AddProductModal from './AddProductModal';
-import secureLocalStorage from 'react-secure-storage';
+// import secureLocalStorage from 'react-secure-storage';
+import UserContext from '../context.js/UserContext';
 
 export default function Home() {
 
     const [products, setProducts] = React.useState([]);
     const [show, setShow] = React.useState(false);
     const [productToEdit, setProductToEdit] = React.useState(null);
-    const [role, setRole] = React.useState(null);
-    const [token, setToken] = React.useState(null);
-
+    const { user } = React.useContext(UserContext);
 
     const getInitialData = async () => {
         try {
@@ -30,13 +29,6 @@ export default function Home() {
     }
     React.useEffect(() => {
         getInitialData();
-
-        const storedRole = secureLocalStorage.getItem('role');
-        setRole(storedRole);
-
-        const storedToken = secureLocalStorage.getItem('token');
-        setToken(storedToken);
-
     }, []);
 
     const AddProductCallBack = (product, id) => {
@@ -61,7 +53,7 @@ export default function Home() {
         try {
             const response = await axios.post(`http://localhost:4000/api/cart/addToCart`, data, {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${user.token}`
                 }
             });
             if (response.data.status === 200) {
@@ -79,13 +71,13 @@ export default function Home() {
         <div>
             <div style={{ padding: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', flexDirection: 'row' }}>
-                    {role === 'admin' && (<Button onClick={() => setShow(true)}>Add Product</Button>)}
+                    {user.role === 'admin' && (<Button onClick={() => setShow(true)}>Add Product</Button>)}
                 </div>
                 {products.length > 0 ? (
                     <Row>
                         {products.map((product, i) => (
                             <Col key={i} xs={12} sm={6} md={4} lg={3}>
-                                <SingleProduct product={product} onEdit={() => handleEditProduct(product)} role={role} addToCart={handleAddToCart} />
+                                <SingleProduct product={product} onEdit={() => handleEditProduct(product)} role={user.role} addToCart={handleAddToCart} />
                             </Col>
                         ))}
                     </Row>
@@ -93,8 +85,8 @@ export default function Home() {
                     <div>No products available at this moment</div>
                 )}
 
-                {show && role === 'admin' && (<AddProductModal visible={show} onClose={handleCloseModal} AddProductCallBack={AddProductCallBack}
-                    productToEdit={productToEdit} role={role}
+                {show && user.role === 'admin' && (<AddProductModal visible={show} onClose={handleCloseModal} AddProductCallBack={AddProductCallBack}
+                    productToEdit={productToEdit} role={user.role}
                 />)}
             </div>
         </div>

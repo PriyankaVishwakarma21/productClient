@@ -4,9 +4,13 @@ import { Form, Button } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
-import secureLocalStorage from 'react-secure-storage';
+import UserContext from '../context.js/UserContext';
+import {useNavigate} from 'react-router-dom';
 
 export default function Login() {
+    const {signIn} = React.useContext(UserContext);
+    const navigate = useNavigate();
+    
     const loginSchema = yup.object({
         email: yup.string().required('Email is required'),
         password: yup.string().required('Password is required')
@@ -15,11 +19,8 @@ export default function Login() {
         try {
             const response = await axios.post(`http://localhost:4000/api/users/login`, values);
             if (response.data.status === 200) {
-
-                secureLocalStorage.setItem("role", response.data.user.role);
-                secureLocalStorage.setItem("token", response.data.token);
-
-                alert(`${response.data.message}`);
+                signIn(response.data.token,response.data.user.role,response.data.user._id);
+                navigate('/');
             }
         } catch (error) {
             alert('Error: ', error);
